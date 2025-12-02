@@ -1,0 +1,3 @@
+module.exports=[37901,a=>{a.n(a.i(89665))},60201,a=>{a.n(a.i(87577))},55188,a=>{a.n(a.i(92369))},22193,a=>{a.n(a.i(3018))},75238,a=>{a.n(a.i(95697))},3018,(a,b,c)=>{"use strict";Object.defineProperty(c,"__esModule",{value:!0}),Object.defineProperty(c,"default",{enumerable:!0,get:function(){return f}});let d=a.r(48075),e=a.r(82283);function f(){return(0,d.jsx)(e.HTTPAccessErrorFallback,{status:401,message:"You're not authorized to access this page."})}("function"==typeof c.default||"object"==typeof c.default&&null!==c.default)&&void 0===c.default.__esModule&&(Object.defineProperty(c.default,"__esModule",{value:!0}),Object.assign(c.default,c),b.exports=c.default)}];
+
+//# sourceMappingURL=open-knowledge-platform_d4dea7d5._.js.map
