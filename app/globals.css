@@ -316,7 +316,22 @@ a {
 }
 
 .animate-glyph-fade {
-  animation: glyph-fade 0.3s ease-out forwards;
+  animation: glyph-fade 0.2s ease-out infinite;
+}
+
+@keyframes glyph-stay {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.animate-glyph-stay {
+  animation: glyph-stay 0.6s ease-out forwards;
 }
 
 /* Fast scan line animations */
@@ -349,11 +364,11 @@ a {
 }
 
 .animate-scan-fast {
-  animation: scan-fast 0.25s ease-out forwards;
+  animation: scan-fast 0.2s ease-out infinite;
 }
 
 .animate-scan-fast-reverse {
-  animation: scan-fast-reverse 0.25s ease-out 0.05s forwards;
+  animation: scan-fast-reverse 0.2s ease-out 0.05s infinite;
 }
 
 /* Micro shift for content during glitch */
@@ -371,7 +386,7 @@ a {
 }
 
 .animate-micro-shift {
-  animation: micro-shift 0.15s ease-out;
+  animation: micro-shift 0.2s ease-out infinite;
 }
 
 /* Horizontal scan for text links */

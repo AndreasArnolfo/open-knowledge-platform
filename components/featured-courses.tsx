@@ -11,6 +11,7 @@ const featuredCourses = [
     description:
       "Master Python with advanced concepts including async programming, decorators, and system design patterns.",
     image: "/python-dark-theme.png",
+    video: "/videos/python-course.mp4",
     level: "Advanced" as const,
     price: 99,
     duration: "40h",
@@ -24,6 +25,7 @@ const featuredCourses = [
     description:
       "Complete cybersecurity course covering penetration testing, vulnerability assessment, and ethical hacking methodologies.",
     image: "/cybersecurity-hacking-terminal-dark-neon.jpg",
+    video: "/videos/ethical-hacking-course.mp4",
     level: "Intermediate" as const,
     price: 129,
     duration: "60h",
@@ -37,6 +39,7 @@ const featuredCourses = [
     description:
       "Prepare for the CCNA certification with comprehensive networking fundamentals and hands-on lab exercises.",
     image: "/network-infrastructure-server-room-dark-blue.jpg",
+    video: "/videos/cisco-ccna-course.mp4",
     level: "Beginner" as const,
     price: 79,
     duration: "35h",
@@ -49,6 +52,7 @@ const featuredCourses = [
     title: "AWS Cloud Practitioner",
     description: "Learn cloud computing fundamentals and prepare for the AWS Cloud Practitioner certification exam.",
     image: "/cloud-computing-aws-infrastructure-dark.jpg",
+    video: "/videos/aws-cloud-course.mp4",
     level: "Beginner" as const,
     price: 69,
     duration: "25h",

@@ -12,6 +12,7 @@ interface CourseCardProps {
   title: string
   description: string
   image: string
+  video?: string
   level: "Beginner" | "Intermediate" | "Advanced"
   price: number
   duration: string
@@ -27,6 +28,7 @@ export function CourseCard({
   title,
   description,
   image,
+  video,
   level,
   price,
   duration,
@@ -113,12 +115,23 @@ export function CourseCard({
         {/* Card content */}
         <div className={`relative ${isGlitching ? "animate-glitch-shift" : ""}`}>
           <div className="relative aspect-video overflow-hidden">
-            <Image
-              src={image || "/placeholder.svg"}
-              alt={title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
+            {video ? (
+              <video
+                src={video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <Image
+                src={image || "/placeholder.svg"}
+                alt={title}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
             <Badge className="absolute top-3 left-3 bg-primary/90 text-primary-foreground">{category}</Badge>
           </div>
