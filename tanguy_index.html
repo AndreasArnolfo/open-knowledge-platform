@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open-Knowledge - Plateforme E-Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #06b6d4;
+            --secondary: #0ea5e9;
+            --accent: #f97316;
+            --bg-dark: #0f172a;
+            --bg-darker: #020617;
+            --bg-card: #1e293b;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg-dark);
+            overflow-x: hidden;
+        }
+
+        /* Particules flottantes en background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float-particle 20s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 15s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 18s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 22s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 20s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 17s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 19s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2s; animation-duration: 21s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 4s; animation-duration: 16s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 1s; animation-duration: 23s; }
+
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+                transform: translateY(90vh) translateX(20px) scale(1);
+            }
+            90% {
+                opacity: 0.3;
+                transform: translateY(10vh) translateX(-20px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(0) translateX(0) scale(0);
+            }
+        }
+
+        /* Gradient animé en background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: gradientPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes gradientPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Loader / Intro - Terminal style */
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-darker);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 1s ease-in-out 4.5s forwards;
+        }
+
+        .terminal-window {
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 2rem;
+            background: rgba(30, 41, 59, 0.95);
+            box-shadow: 
+                0 0 80px rgba(6, 182, 212, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            min-width: 600px;
+            backdrop-filter: blur(10px);
+            animation: terminalGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes terminalGlow {
+            0%, 100% { box-shadow: 0 0 80px rgba(6, 182, 212, 0.4); }
+            50% { box-shadow: 0 0 100px rgba(6, 182, 212, 0.6); }
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: buttonPulse 1.5s ease-in-out infinite;
+        }
+
+        .terminal-button:nth-child(1) { 
+            background: #ef4444; 
+            animation-delay: 0s;
+        }
+        .terminal-button:nth-child(2) { 
+            background: #f59e0b; 
+            animation-delay: 0.2s;
+        }
+        .terminal-button:nth-child(3) { 
+            background: #10b981; 
+            animation-delay: 0.4s;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .terminal-content {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: var(--primary);
+        }
+
+        .typing-line {
+            opacity: 0;
+            animation: typeIn 0.5s ease-in forwards;
+            margin-bottom: 0.5rem;
+        }
+
+        .typing-line:nth-child(1) { animation-delay: 0.5s; }
+        .typing-line:nth-child(2) { animation-delay: 1s; }
+        .typing-line:nth-child(3) { animation-delay: 1.5s; }
+        .typing-line:nth-child(4) { animation-delay: 2s; }
+        .typing-line:nth-child(5) { animation-delay: 2.5s; }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--primary);
+            margin-left: 3px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes typeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* Navigation avec animation de slide */
+        nav {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.6s ease-out 4.5s both;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), transparent);
+            animation: logoShine 3s ease-in-out infinite;
+        }
+
+        @keyframes logoShine {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links li {
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .nav-links li:nth-child(1) { animation-delay: 4.7s; }
+        .nav-links li:nth-child(2) { animation-delay: 4.8s; }
+        .nav-links li:nth-child(3) { animation-delay: 4.9s; }
+        .nav-links li:nth-child(4) { animation-delay: 5s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            display: block;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+            border: 1px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out 5.1s forwards;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+        }
+
+        /* Hero Section avec animations */
+        .hero {
+            padding: 8rem 0 6rem;
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            line-height: 1.2;
+            text-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+            opacity: 0;
+            animation: titleReveal 1s ease-out 5.3s forwards;
+        }
+
+        @keyframes titleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+                filter: blur(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+            display: inline-block;
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 30px rgba(6, 182, 212, 0.6); }
+            50% { text-shadow: 0 0 50px rgba(6, 182, 212, 0.8); }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 5.6s forwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 5.8s forwards;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
+            border: 1px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-primary:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-secondary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Stats avec animations échelonnées */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: statAppear 0.6s ease-out forwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 6s; }
+        .stat-card:nth-child(2) { animation-delay: 6.15s; }
+        .stat-card:nth-child(3) { animation-delay: 6.3s; }
+        .stat-card:nth-child(4) { animation-delay: 6.45s; }
+
+        @keyframes statAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.3);
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features Section avec scroll animations */
+        .features {
+            padding: 6rem 0;
+            background: var(--bg-darker);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .section-title span {
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+            position: relative;
+        }
+
+        .section-title span::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            animation: underlineExpand 2s ease-in-out infinite;
+        }
+
+        @keyframes underlineExpand {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(1.1); }
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: all 0.6s ease;
+            transform: scale(0);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) rotateX(2deg);
+            border-color: var(--primary);
+            box-shadow: 0 15px 50px rgba(6, 182, 212, 0.25);
+        }
+
+        .feature-card:hover::after {
+            opacity: 0.3;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 40px rgba(6, 182, 212, 0.6);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover h3 {
+            color: var(--primary);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Courses Section avec hover sophistiqué */
+        .courses {
+            padding: 6rem 0;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .course-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 
+                0 20px 60px rgba(6, 182, 212, 0.3),
+                0 0 0 1px rgba(6, 182, 212, 0.1) inset;
+        }
+
+        .course-card:hover::before {
+            opacity: 1;
+        }
+
+        .course-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .course-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .course-card:hover .course-image::before {
+            transform: translateX(100%);
+        }
+
+        .course-card:hover .course-image {
+            transform: scale(1.05);
+        }
+
+        .course-content {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .course-category {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover .course-category {
+            background: rgba(6, 182, 212, 0.25);
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .course-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+            transition: color 0.3s ease;
+        }
+
+        .course-card:hover h3 {
+            color: var(--primary);
+        }
+
+        .course-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .course-students {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover .course-students {
+            color: var(--text);
+            transform: translateX(3px);
+        }
+
+        .course-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--accent);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover .course-rating {
+            transform: scale(1.1);
+        }
+
+        /* CTA Section avec animations */
+        .cta-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-card) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+            animation: ctaGradient 10s ease infinite;
+        }
+
+        @keyframes ctaGradient {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+            position: relative;
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+        }
+
+        .cta-section h2 span {
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .btn-glow {
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+            border: 1px solid var(--primary);
+            overflow: hidden;
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-glow:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-glow::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: ctaShine 3s ease-in-out infinite;
+        }
+
+        @keyframes ctaShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            50%, 100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 50px rgba(6, 182, 212, 0.7);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-darker);
+            padding: 3rem 0 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50%;
+            height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .footer-section:hover h4::after {
+            width: 100%;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+        }
+
+        .footer-links a::before {
+            content: '→';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 20px;
+        }
+
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .terminal-window {
+                min-width: 90%;
+                padding: 1.5rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particules flottantes -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Intro Terminal -->
+    <div class="intro-overlay">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-button"></div>
+                <div class="terminal-button"></div>
+                <div class="terminal-button"></div>
+            </div>
+            <div class="terminal-content">
+                <div class="typing-line">$ initializing Open-Knowledge platform...</div>
+                <div class="typing-line">$ loading modules: [████████████] 100%</div>
+                <div class="typing-line">$ connecting to learning database...</div>
+                <div class="typing-line">$ status: READY ✓</div>
+                <div class="typing-line">$ welcome to Open-Knowledge<span class="cursor"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">Open-Knowledge</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Accueil</a></li>
+                    <li><a href="#courses">Cours</a></li>
+                    <li><a href="#about">À propos</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <a href="#" class="cta-button">Commencer</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Apprenez <span>Sans Limites</span></h1>
+            <p>Découvrez des milliers de cours en ligne créés par des experts. Développez vos compétences à votre rythme.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary">Explorer les Cours</a>
+                <a href="#" class="btn-secondary">En savoir plus</a>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Étudiants actifs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Cours disponibles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Instructeurs experts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.8/5</div>
+                    <div class="stat-label">Note moyenne</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Pourquoi Choisir <span>Open-Knowledge</span> ?</h2>
+                <p class="section-subtitle">Une plateforme conçue pour maximiser votre apprentissage</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Catalogue Riche</h3>
+                    <p>Accédez à plus de 500 cours couvrant tous les domaines : tech, business, design et plus encore.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h3>Experts Certifiés</h3>
+                    <p>Apprenez auprès de professionnels reconnus dans leur domaine avec des années d'expérience.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Apprentissage Flexible</h3>
+                    <p>Étudiez à votre rythme, sur n'importe quel appareil, quand vous voulez et où vous voulez.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Certificats Reconnus</h3>
+                    <p>Obtenez des certificats valorisés par les entreprises pour booster votre carrière.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Communauté Active</h3>
+                    <p>Échangez avec des milliers d'apprenants et créez votre réseau professionnel.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Suivi de Progression</h3>
+                    <p>Visualisez vos progrès avec des tableaux de bord détaillés et des objectifs personnalisés.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section class="courses">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Cours <span>Populaires</span></h2>
+                <p class="section-subtitle">Découvrez nos formations les plus appréciées</p>
+            </div>
+
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-image">💻</div>
+                    <div class="course-content">
+                        <span class="course-category">Développement</span>
+                        <h3>Développement Web Full-Stack</h3>
+                        <p>Maîtrisez HTML, CSS, JavaScript, React et Node.js pour créer des applications complètes.</p>
+                        <div class="course-meta">
+                            <span class="course-students">👥 2,450 étudiants</span>
+                            <span class="course-rating">⭐ 4.8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image">🎨</div>
+                    <div class="course-content">
+                        <span class="course-category">Design</span>
+                        <h3>UI/UX Design Moderne</h3>
+                        <p>Créez des interfaces utilisateur magnifiques et intuitives avec Figma et les principes UX.</p>
+                        <div class="course-meta">
+                            <span class="course-students">👥 1,820 étudiants</span>
+                            <span class="course-rating">⭐ 4.9</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image">🤖</div>
+                    <div class="course-content">
+                        <span class="course-category">Intelligence Artificielle</span>
+                        <h3>Machine Learning A-Z</h3>
+                        <p>Plongez dans le monde de l'IA avec Python, TensorFlow et des projets pratiques.</p>
+                        <div class="course-meta">
+                            <span class="course-students">👥 3,150 étudiants</span>
+                            <span class="course-rating">⭐ 4.7</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image">📱</div>
+                    <div class="course-content">
+                        <span class="course-category">Mobile</span>
+                        <h3>Développement Mobile React Native</h3>
+                        <p>Créez des applications iOS et Android avec une seule base de code en JavaScript.</p>
+                        <div class="course-meta">
+                            <span class="course-students">👥 1,650 étudiants</span>
+                            <span class="course-rating">⭐ 4.6</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image">📊</div>
+                    <div class="course-content">
+                        <span class="course-category">Data Science</span>
+                        <h3>Data Science avec Python</h3>
+                        <p>Analysez et visualisez des données avec Pandas, NumPy et Matplotlib.</p>
+                        <div class="course-meta">
+                            <span class="course-students">👥 2,890 étudiants</span>
+                            <span class="course-rating">⭐ 4.8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image">☁️</div>
+                    <div class="course-content">
+                        <span class="course-category">Cloud</span>
+                        <h3>AWS Cloud Practitioner</h3>
+                        <p>Maîtrisez les services cloud Amazon et préparez la certification AWS.</p>
+                        <div class="course-meta">
+                            <span class="course-students">👥 1,420 étudiants</span>
+                            <span class="course-rating">⭐ 4.7</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Prêt à Commencer Votre <span>Voyage</span> ?</h2>
+            <p>Rejoignez des milliers d'étudiants qui transforment leur carrière avec Open-Knowledge</p>
+            <a href="#" class="btn-glow">Inscription Gratuite</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Open-Knowledge</h4>
+                    <p style="color: var(--text-muted);">La plateforme d'apprentissage en ligne qui transforme votre avenir.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Liens Rapides</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Accueil</a></li>
+                        <li><a href="#">Cours</a></li>
+                        <li><a href="#">À propos</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Suivez-nous</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Open-Knowledge. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
